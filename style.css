@@ -1,0 +1,30 @@
+.sidebar .block-container {
+    background-color: #f1f1f1;
+}
+.prompt-output {
+    background-color: #e8f5e9;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+.prompt-number {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #2e7d32;
+}
+.prompt-text {
+    font-size: 1.2em;
+    color: #424242;
+}
+.generate-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    border-radius: 8px;
+    cursor: pointer;
+}

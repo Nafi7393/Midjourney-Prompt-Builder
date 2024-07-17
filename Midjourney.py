@@ -2,47 +2,63 @@ import google.generativeai as genai
 import os
 from dotenv import load_dotenv
 
+
 class MidjourneyPromptGenerator:
     """
     This class helps generate a single high-quality Midjourney prompt.
     """
 
-    def __init__(self):
+    def __init__(self, api_key=None, model_name="gemini-1.5-flash"):
         """
-        Loads the API key from environment variable and configures the API.
+        Initializes the generator, loading the API key and configuring the API.
+
+        Args:
+            api_key (str): The API key for Gemini. If not provided, it will be loaded from the GEMINI_API_KEY environment variable.
+            model_name (str): The model name to use for generating content.
         """
-        load_dotenv()
-        self.api_key = os.getenv("GEMINI_API_KEY")
-        if not self.api_key:
-            print("Error: Please set your Gemini API key in the GEMINI_API_KEY environment variable.")
-            exit(1)
+        if api_key:
+            self.api_key = api_key
+        else:
+            raise ValueError("Error: Please set your Gemini API key in the GEMINI_API_KEY environment variable.")
+
+        self.model_name = model_name
         genai.configure(api_key=self.api_key)
+
+        self.model = genai.GenerativeModel(model_name=self.model_name)
 
     def get_user_input(self, prompt):
         """
         Helper function to get input from the user.
+
+        Args:
+            prompt (str): The prompt to display to the user.
+
+        Returns:
+            str: The user's input.
         """
         return input(prompt).strip()
 
-    def generate_prompt(self):
+    def generate_prompt(self, base_idea, art_style, mood_or_theme=None,
+                        specific_elements=None, emotion_or_feeling=None, color_palette=None,
+                        additional_details=None, composition_style=None):
         """
-        Prompts the user for a single concept and generates a refined Midjourney prompt.
-        """
-        base_idea = self.get_user_input("Enter the base idea for your artwork: ")
-        art_style = self.get_user_input("Enter the desired art style (e.g., surreal, cyberpunk): ")
-        additional_info = self.get_user_input("Enter any additional information (optional): ")
-        mood_or_theme = self.get_user_input("Enter the mood or theme you want to capture (optional): ")
-        specific_elements = self.get_user_input("Enter any specific elements to include (optional): ")
-        emotion_or_feeling = self.get_user_input("Enter the emotion or feeling you want to evoke (optional): ")
-        color_palette = self.get_user_input("Enter the color palette to focus on (optional): ")
-        additional_details = self.get_user_input("Enter any additional details to enhance impact (optional): ")
-        composition_style = self.get_user_input("Enter the composition style (optional): ")
+        Generates a refined Midjourney prompt based on provided parameters or user input.
 
+        Args:
+            base_idea: The base idea for the artwork.
+            art_style: The desired art style.
+            mood_or_theme: The mood or theme to capture.
+            specific_elements: Any specific elements to include.
+            emotion_or_feeling: The emotion or feeling to evoke.
+            color_palette: The color palette to focus on.
+            additional_details: Any additional details to enhance impact.
+            composition_style: The composition style.
+
+        Returns:
+            str: The generated high-quality Midjourney prompt.
+        """
         # Craft a high-quality prompt combining creativity and technical aspects
-        prompt = f"Create total of 3 Midjourney prompt where the main idea is {base_idea}. The art style should be {art_style}."
-
-        if additional_info:
-            prompt += f" It should include {additional_info}."
+        prompt = f"Create a Midjourney prompt where the main idea is {base_idea}. The art style should be {art_style}."
         if mood_or_theme:
             prompt += f" Make sure to capture the essence of {mood_or_theme}."
         if specific_elements:
@@ -56,20 +72,27 @@ class MidjourneyPromptGenerator:
         if composition_style:
             prompt += f" The composition should be {composition_style}."
 
-        prompt += f"\n EXAMPLE OUTPUT: /imagine prompt:A bulldog wearing sunglasses, riding a bicycle with a basket full of flowers, pop art style, vibrant colors, bold outlines, comic book aesthetic, dynamic pose, cityscape background"
-        # Use Gemini to refine the prompt further
-        model_name = "gemini-1.5-flash"  # Replace with your preferred model
-        model = genai.GenerativeModel(model_name)
-        response = model.generate_content(prompt)
+        prompt += f"""\n \n HERE ARE SOME EXAMPLE OUTPUT:
+        1. /imagine prompt:A bulldog wearing sunglasses, riding a bicycle with a basket full of flowers, pop art style, vibrant colors, bold outlines, comic book aesthetic, dynamic pose, cityscape background
+        2. /imagine prompt:A kawaii anime cat wearing a pink and white sailor-style high school uniform, with large, sparkling eyes, a blush on her cheeks, and a cute little heart-shaped purse. The cat is holding a single pink rose in her paw, surrounded by sparkling hearts and a soft, pastel pink background. Focus on the cat's adorable features and create a design suitable for a t-shirt
 
-        # Leverage the generated text to potentially improve the prompt (optional)
-        # You can analyze the response.text and modify the prompt here (e.g., add keywords)
+Please note that the output should be in this format and only in this format: '/imagine prompt: [YOUR PROMPT]"""
 
-        return response.text
+        response = self.model.generate_content(prompt)
+
+        return response
 
 
 if __name__ == "__main__":
-    generator = MidjourneyPromptGenerator()
-    midjourney_prompt = generator.generate_prompt()
-    print("Your high-quality Midjourney prompt:")
-    print(midjourney_prompt)
+    load_dotenv()
+    GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+    generator = MidjourneyPromptGenerator(api_key=GEMINI_API_KEY, model_name="gemini-1.5-flash")
+    midjourney_prompt = generator.generate_prompt(base_idea="skeleton riding bike",
+                                                  art_style="pop art",
+                                                  mood_or_theme="",
+                                                  specific_elements="",
+                                                  emotion_or_feeling="",
+                                                  color_palette="",
+                                                  additional_details="",
+                                                  composition_style="bright illustration")
+    print(midjourney_prompt.text)
