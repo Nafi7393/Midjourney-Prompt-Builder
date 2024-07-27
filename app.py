@@ -1,5 +1,5 @@
 import streamlit as st
-from Midjourney import MidjourneyPromptGenerator
+from main import MidjourneyPromptGenerator
 from dotenv import load_dotenv
 import os
 
@@ -75,8 +75,10 @@ def main():
                                                            color_palette=color_palette,
                                                            additional_details=additional_details,
                                                            composition_style=composition_style)
+                        this_prompt = prompt.text
+                        this_prompt = this_prompt.replace(".", "")
                         # Add each generated prompt to session state
-                        st.session_state.prompts.append(prompt.text)
+                        st.session_state.prompts.append(this_prompt)
                     except Exception as e:
                         st.error(f"Error generating prompt {i}: {str(e)}")
             except Exception as e:
