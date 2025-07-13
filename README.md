@@ -1,11 +1,11 @@
-# Midjourney Prompt Generator
+# Midjourney Prompt Builder
 
-The **Midjourney Prompt Generator** is a Python-based application that allows users to generate high-quality prompts for Midjourney, an AI tool for creating artistic images. This tool integrates with the Gemini API to generate prompts based on user inputs.
+The **Midjourney Prompt Builder** is a Python-based application that allows users to generate high-quality prompts for Midjourney, an AI tool for creating artistic images. This tool integrates with the Gemini API to generate prompts based on user inputs.
 
 
 ## Project Overview
 
-The Midjourney Prompt Generator is designed to help users create prompts for the Midjourney AI, which can be used to generate artistic images. The application provides a user-friendly interface for entering various prompt parameters and generates refined prompts ready for use with Midjourney.
+The Midjourney Prompt Builder is designed to help users create prompts for the Midjourney AI, which can be used to generate artistic images. The application provides a user-friendly interface for entering various prompt parameters and generates refined prompts ready for use with Midjourney.
 
 ## Features
 
